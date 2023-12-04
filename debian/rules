@@ -1,4 +1,23 @@
 #!/usr/bin/make -f
 
+export DH_GOLANG_EXCLUDES := google/longrunning
+
 %:
-	dh $@
+	dh $@ --buildsystem=golang --with=golang --builddirectory=_build
+
+override_dh_clean:
+	dh_clean
+	-find . -type f -name '*.pb.go' -delete -printf 'removed %p\n'            ## delete generated .pb.go files
+
+override_dh_auto_build:
+	## build compiler:
+	DH_GOPKG="github.com/gogo/googleapis/protoc-gen-gogogoogleapis"    dh_auto_build -v
+	## generate .pb.go files:
+	PATH="$(CURDIR)/_build/bin:$${PATH}" $(MAKE) regenerate
+	## install generated .pb.go files into build directory:
+	dh_auto_configure
+	## build:
+	dh_auto_build
+
+override_dh_auto_install:
+	dh_auto_install -- --no-binaries
