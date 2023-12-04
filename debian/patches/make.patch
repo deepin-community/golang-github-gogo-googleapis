@@ -1,0 +1,17 @@
+Last-Update: 2018-08-07
+Forwarded: not-needed
+Author: Dmitry Smirnov <onlyjob@debian.org>
+Description: adjust Makefile to regenerate on build-time.
+
+--- a/Makefile
++++ b/Makefile
+@@ -1,9 +1,7 @@
+ URL="https://raw.githubusercontent.com/googleapis/googleapis/master/"
+ 
+ regenerate:
+-	go install ./protoc-gen-gogogoogleapis
+-
+ 	protoc \
+ 	--gogogoogleapis_out=\
+ 	Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types,\
+ 	Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,\
